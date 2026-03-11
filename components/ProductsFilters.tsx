@@ -37,6 +37,7 @@ export function ProductsFilters({
           <input
             type="number"
             step={10}
+            min={0}
             name="minPrice"
             defaultValue={minPrice}
             placeholder="Min £"
@@ -46,6 +47,7 @@ export function ProductsFilters({
           <input
             type="number"
             step={10}
+            min={0}
             name="maxPrice"
             defaultValue={maxPrice}
             placeholder="Max £"
