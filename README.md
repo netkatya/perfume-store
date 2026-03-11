@@ -1,98 +1,70 @@
-# 🧪 Frontend Technical Test – Next.js (App Router)
+# Perfume Store – Next.js Technical Test
 
-Thank you for taking the time to complete this exercise.
+A small product catalogue built with **Next.js (App Router)** and **TypeScript**.
 
-This task is designed to assess practical Next.js skills, architectural thinking, and frontend fundamentals.  
-We care more about structure and reasoning than visual polish.
-
----
-
-## ⏱ Time Expectation
-
-Please spend a maximum of **8 hours** on this task.
-
-You’re welcome to spend longer if you wish, but we will evaluate with the suggested timebox in mind.
+The goal of this project is to demonstrate practical usage of Next.js features, server and client component architecture, API route handlers, and common frontend patterns such as filtering, sorting, pagination, and global state management.
 
 ---
 
-# 🎯 The Task
+# Tech Stack
 
-Build a small **Next.js application (latest stable version)** using:
-
-- ✅ App Router
-- ✅ TypeScript
-- ✅ Any styling solution of your choice
-
-The application should implement a small product catalogue with search, filtering, and detail pages.
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- Zustand (basket state management)
+- Lucide React (icons)
 
 ---
 
-# 📦 Requirements
+# Setup Instructions
 
-## 1️⃣ Data & API Layer
+1. Clone the repository
 
-Create a local dataset inside the project (e.g. `/data/products.json`) containing **15–30 products**.
+```bash
+git clone <repository-url>
+```
 
-Each product must include:
+2. Install dependencies
 
-- `id`
-- `name`
-- `brand`
-- `price`
-- `description`
-- `tags` (array of strings)
-- `rating` (number)
-- optional `imageUrl`
+```bash
+npm install
+```
 
-Expose this data via **Next.js Route Handlers**:
+3. Run the development server
 
-### `GET /api/products`
+```bash
+npm run dev
+```
 
-Supports query parameters:
+Open the application:
 
-- `q` → text search (name / brand / tags)
-- `minPrice`
-- `maxPrice`
-- `tag`
-- `sort` → `price_asc`, `price_desc`, `rating_desc`
-- `page`
-- `pageSize`
-
-Response shape:
-
-```ts
-{
-  items: Product[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
+```
+http://localhost:3000/products
 ```
 
 ---
 
-### `GET /api/products/[id]`
+# Features
 
-- Returns a single product
-- Returns 404 if not found
+## Product Catalogue
 
----
+Route:
 
-## 2️⃣ Product List Page
+```
+/products
+```
 
-Route: `/products`
+The catalogue page includes:
 
-Must include:
-
-- Search input
-- At least one filter
-- Sorting
-- Pagination OR “Load more”
+- Product search
+- Price filtering
+- Tag filtering
+- Sorting by price and rating
+- Pagination
 - Loading state
 - Empty state
 
-**Important:**  
-The URL must reflect state using search params.
+All filters and sorting are reflected in **URL search parameters**, allowing users to share filtered links and use browser navigation.
 
 Example:
 
@@ -100,108 +72,159 @@ Example:
 /products?q=rose&sort=price_asc&page=2
 ```
 
+The catalogue layout is **fully responsive and works across all screen sizes**, adapting the grid and layout for desktop, tablet, and mobile devices.
+
 ---
 
-## 3️⃣ Product Detail Page
+## Product Detail Page
 
-Route: `/products/[id]`
+Route:
 
-Must include:
+```
+/products/[id]
+```
+
+Features:
 
 - Server-rendered product details
-- Proper 404 handling using `notFound()`
-- “Add to Basket” button (client-side interaction)
+- Dynamic metadata using `generateMetadata`
+- Proper `notFound()` handling
+- "Add to Basket" client-side interaction
 
 ---
 
-## 4️⃣ Basket Functionality
+## Basket
 
-Implement either:
+Route:
 
-- A `/basket` page  
-OR  
-- A persistent mini-basket in the layout
+```
+/basket
+```
 
-Must support:
+The basket functionality is implemented using **Zustand** for global state management.
 
-- Viewing items
-- Updating quantity
+Supported functionality:
+
+- Viewing items in the basket
+- Updating item quantity
 - Removing items
-- Showing total price
+- Displaying the total price
 
-State management approach is up to you.
-
----
-
-# ⚙️ Next.js-Specific Requirements
-
-Please implement **at least two** of the following:
-
-- A considered caching / revalidation strategy
-- Validation of route handler query parameters
-- Suspense / streaming with loading skeletons
-- Dynamic `generateMetadata()` on product detail pages
-- `error.tsx` and/or `not-found.tsx`
-
-In your README, briefly explain the reasoning behind your choices.
+The header also includes a **basket indicator showing the total number of items currently added**.
 
 ---
 
-# 📁 Deliverables
+## Responsive Design
 
-Please provide:
+The application is designed to work **across all screen sizes**.
 
-- A GitHub repository (private or public)
-- A `README.md` including:
-  - Setup instructions
-  - Architectural decisions
-  - What you would improve with more time
+The layout automatically adapts for:
+
+- desktop
+- tablet
+- mobile devices
+
+Navigation includes a **responsive header with a mobile menu**, ensuring a good experience on smaller screens.
 
 ---
 
-# 🤖 AI Usage
+# API
 
-You are allowed to use AI tools (Copilot, ChatGPT, etc.).
+## GET /api/products
 
-Please include a file called:
+Supports query parameters:
+
+- `q` — text search (name, brand, tags)
+- `minPrice`
+- `maxPrice`
+- `tag`
+- `sort`
+  - `price_asc`
+  - `price_desc`
+  - `rating_desc`
+- `page`
+- `pageSize`
+
+Response format:
+
+```json
+{
+  "items": [],
+  "total": 0,
+  "page": 1,
+  "pageSize": 6
+}
+```
+
+---
+
+## GET /api/products/[id]
+
+Returns a single product.
+
+Returns **404** if the product does not exist.
+
+---
+
+# Architectural Decisions
+
+## App Router
+
+The application uses **Next.js App Router** with a mix of **Server and Client Components**.
+
+- Product pages are rendered on the server
+- Interactive elements such as basket interactions are handled with client components
+
+---
+
+## URL State
+
+Filtering and sorting are implemented using **URL search parameters**.
+
+This allows:
+
+- shareable URLs
+- proper browser navigation
+- server-driven filtering logic
+
+---
+
+## Basket State Management
+
+Basket state is managed using **Zustand**, which provides a lightweight and simple global state solution.
+
+Basket data is persisted using **localStorage**.
+
+---
+
+## Data Layer
+
+Product data is stored locally in:
 
 ```
-AI-NOTES.md
+/data/products.ts
 ```
 
-In this file, briefly describe:
+API route handlers simulate backend behaviour.
 
-- What AI tools you used (if any)
-- Two examples where you improved or corrected AI-generated output
-- One architectural tradeoff you made and why
-
-We care about judgement and understanding more than whether AI was used.
+Filtering, sorting, and pagination are implemented **server-side**.
 
 ---
 
-# 🧠 What We’re Evaluating
+# Next.js Features Implemented
 
-- Understanding of Next.js App Router
-- Server vs Client component decisions
-- Data fetching & caching awareness
-- URL state handling
-- TypeScript usage
-- Code organisation & readability
-- Loading / empty / error handling
-- General UX & edge cases
-- Technical reasoning
+- App Router
+- Route Handlers
+- Server Components
+- `generateMetadata`
+- `notFound()`
+- `loading.tsx`
+- Query parameter validation
 
 ---
 
-# 💬 Notes
+# What I Would Improve With More Time
 
-- Keep it simple — avoid over-engineering.
-- Visual design is not the focus.
-- Clean structure and clarity matter most.
-- Production-level polish is a bonus, not a requirement.
-
----
-
-If anything is unclear, please ask before starting.
-
-We look forward to reviewing your solution 🚀
+- Improve **accessibility** (ARIA attributes, keyboard navigation, focus management).
+- Refine **UI styling and visual consistency** across components.
+- Further polish the **responsive experience**, although the application already works across all screen sizes and includes a mobile navigation menu.
