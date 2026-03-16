@@ -9,7 +9,7 @@ type Props = {
 
 export function ProductCard({ product }: Props) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-(--border) bg-(--hover-bg)/60">
+    <li className="overflow-hidden rounded-3xl border border-(--border) bg-(--hover-bg)/60">
       <div className=" bg-gray-100">
         {product.imageUrl ? (
           <Image
@@ -44,16 +44,16 @@ export function ProductCard({ product }: Props) {
           {product.description}
         </p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <ul className="mt-4 flex flex-wrap gap-2">
           {product.tags.map((tag) => (
-            <span
+            <li
               key={tag}
               className="rounded-full border border-(--border) bg-white shadow-sm px-3 py-1 text-md font-medium text-(--text-secondary) capitalize"
             >
               {tag}
-            </span>
+            </li>
           ))}
-        </div>
+        </ul>
 
         <div className="mt-5 flex items-center justify-between">
           <span className="text-lg font-semibold text-(--text-primary)">
@@ -67,6 +67,6 @@ export function ProductCard({ product }: Props) {
           </Link>
         </div>
       </div>
-    </div>
+    </li>
   );
 }

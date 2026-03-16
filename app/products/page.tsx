@@ -53,11 +53,11 @@ export default async function ProductsPage({ searchParams }: Props) {
         </div>
       ) : (
         <>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {result.items.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </ul>
 
           <Pagination
             currentPage={result.page}

@@ -15,20 +15,10 @@ export async function GET(request: NextRequest) {
   const pageParam = searchParams.get("page");
   const pageSizeParam = searchParams.get("pageSize");
 
-  const minPrice =
-    minPriceParam !== null && minPriceParam !== ""
-      ? Number(minPriceParam)
-      : undefined;
-
-  const maxPrice =
-    maxPriceParam !== null && maxPriceParam !== ""
-      ? Number(maxPriceParam)
-      : undefined;
-
-  const page = pageParam !== null && pageParam !== "" ? Number(pageParam) : 1;
-
-  const pageSize =
-    pageSizeParam !== null && pageSizeParam !== "" ? Number(pageSizeParam) : 6;
+  const minPrice = minPriceParam ? Number(minPriceParam) : undefined;
+  const maxPrice = maxPriceParam ? Number(maxPriceParam) : undefined;
+  const page = pageParam ? Number(pageParam) : 1;
+  const pageSize = pageSizeParam ? Number(pageSizeParam) : 6;
 
   if (sortParam && !allowedSorts.includes(sortParam as ProductSort)) {
     return NextResponse.json(
@@ -36,28 +26,24 @@ export async function GET(request: NextRequest) {
       { status: 400 },
     );
   }
-
-  if (minPrice !== undefined && Number.isNaN(minPrice)) {
+  if (minPrice !== undefined && !Number.isFinite(minPrice)) {
     return NextResponse.json(
       { message: "minPrice must be a valid number" },
       { status: 400 },
     );
   }
-
-  if (maxPrice !== undefined && Number.isNaN(maxPrice)) {
+  if (maxPrice !== undefined && !Number.isFinite(maxPrice)) {
     return NextResponse.json(
       { message: "maxPrice must be a valid number" },
       { status: 400 },
     );
   }
-
   if (!Number.isInteger(page) || page < 1) {
     return NextResponse.json(
       { message: "page must be a positive integer" },
       { status: 400 },
     );
   }
-
   if (!Number.isInteger(pageSize) || pageSize < 1) {
     return NextResponse.json(
       { message: "pageSize must be a positive integer" },
@@ -65,20 +51,26 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  let filtered = [...products];
+  // Apply filters in order of restrictiveness
+  let filtered = products;
+
+  if (tag) {
+    const normalizedTag = tag.toLowerCase();
+    filtered = filtered.filter((product) =>
+      product.tags.some((item) => item.toLowerCase() === normalizedTag),
+    );
+  }
 
   if (q) {
     const normalizedQuery = q.toLowerCase();
-
-    filtered = filtered.filter((product) => {
-      return (
+    filtered = filtered.filter(
+      (product) =>
         product.name.toLowerCase().includes(normalizedQuery) ||
         product.brand.toLowerCase().includes(normalizedQuery) ||
         product.tags.some((item) =>
           item.toLowerCase().includes(normalizedQuery),
-        )
-      );
-    });
+        ),
+    );
   }
 
   if (minPrice !== undefined) {
@@ -89,24 +81,15 @@ export async function GET(request: NextRequest) {
     filtered = filtered.filter((product) => product.price <= maxPrice);
   }
 
-  if (tag) {
-    const normalizedTag = tag.toLowerCase();
-
-    filtered = filtered.filter((product) =>
-      product.tags.some((item) => item.toLowerCase() === normalizedTag),
-    );
-  }
-
-  if (sortParam === "price_asc") {
-    filtered.sort((a, b) => a.price - b.price);
-  }
-
-  if (sortParam === "price_desc") {
-    filtered.sort((a, b) => b.price - a.price);
-  }
-
-  if (sortParam === "rating_desc") {
-    filtered.sort((a, b) => b.rating - a.rating);
+  // Only sort if sortParam is provided
+  if (sortParam) {
+    if (sortParam === "price_asc") {
+      filtered = filtered.slice().sort((a, b) => a.price - b.price);
+    } else if (sortParam === "price_desc") {
+      filtered = filtered.slice().sort((a, b) => b.price - a.price);
+    } else if (sortParam === "rating_desc") {
+      filtered = filtered.slice().sort((a, b) => b.rating - a.rating);
+    }
   }
 
   const total = filtered.length;

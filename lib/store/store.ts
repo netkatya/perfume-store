@@ -15,7 +15,6 @@ type BasketStore = {
   updateQuantity: (productId: string, quantity: number) => void;
   clearBasket: () => void;
   getTotalItems: () => number;
-  getTotalPrice: () => number;
 };
 
 export const useBasketStore = create<BasketStore>()(

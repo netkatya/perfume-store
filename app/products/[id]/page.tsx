@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getProductById } from "@/lib/api/products";
 import { AddToBasketButton } from "@/components/AddToBasketButton";
+import { Star } from "lucide-react";
 
 type Props = {
   params: Promise<{
@@ -58,23 +59,23 @@ export default async function ProductPage({ params }: Props) {
           <h1 className="mt-2 text-3xl font-bold">{product.name}</h1>
           <p className="mt-4 text-gray-600">{product.description}</p>
 
-          <div className="mt-4 flex flex-wrap gap-2">
+          <ul className="mt-4 flex flex-wrap gap-2">
             {product.tags.map((tag) => (
-              <span
+              <li
                 key={tag}
                 className="rounded-full bg-gray-100 px-2 py-1 text-xs"
               >
                 {tag}
-              </span>
+              </li>
             ))}
-          </div>
+          </ul>
 
           <div className="mt-6 text-xl font-semibold">
             ${product.price.toFixed(2)}
           </div>
 
-          <div className="mt-2 text-sm text-gray-600">
-            Rating: ⭐ {product.rating}
+          <div className="flex gap-2 mt-2 text-sm text-gray-600">
+            Rating: <Star size={16} color="#edf503"></Star> {product.rating}
           </div>
 
           <AddToBasketButton product={product} />

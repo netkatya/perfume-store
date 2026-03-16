@@ -15,7 +15,7 @@ export function Header() {
       <header className="sticky top-0 z-50 border-b border-(--border) bg-(--hover-bg)/60 shadow-sm backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <Link
-            href="/products"
+            href="/"
             onClick={() => setIsOpen(false)}
             className="text-2xl font-semibold tracking-tight text-(--text-primary) transition hover:text-(--accent-hover)"
           >
@@ -70,7 +70,7 @@ export function Header() {
       >
         <div className="mb-8 flex items-center justify-between">
           <Link
-            href="/products"
+            href="/"
             onClick={() => setIsOpen(false)}
             className="text-2xl font-semibold tracking-tight text-(--text-primary) transition hover:text-(--accent-hover)"
           >

@@ -12,7 +12,8 @@ export default function BasketPage() {
   const removeItem = useBasketStore((state) => state.removeItem);
   const updateQuantity = useBasketStore((state) => state.updateQuantity);
   const clearBasket = useBasketStore((state) => state.clearBasket);
-  const totalPrice = useBasketStore((state) => state.getTotalPrice());
+
+  const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   if (!hydrated) {
     return (

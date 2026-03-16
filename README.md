@@ -228,3 +228,10 @@ Filtering, sorting, and pagination are implemented **server-side**.
 - Improve **accessibility** (ARIA attributes, keyboard navigation, focus management).
 - Refine **UI styling and visual consistency** across components.
 - Further polish the **responsive experience**, although the application already works across all screen sizes and includes a mobile navigation menu.
+
+---
+
+fixed div -> ul>li
+fixed basket -> amount on page, not in store
+app>api optimized
+main page added
