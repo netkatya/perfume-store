@@ -41,7 +41,6 @@ export default async function ProductsPage({ searchParams }: Props) {
         sort={params.sort}
         minPrice={params.minPrice}
         maxPrice={params.maxPrice}
-        pageSize={params.pageSize ?? "6"}
       />
 
       {result.items.length === 0 ? (
