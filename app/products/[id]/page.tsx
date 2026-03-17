@@ -71,7 +71,7 @@ export default async function ProductPage({ params }: Props) {
           </ul>
 
           <div className="mt-6 text-xl font-semibold">
-            ${product.price.toFixed(2)}
+            £{product.price.toFixed(2)}
           </div>
 
           <div className="flex gap-2 mt-2 text-sm text-gray-600">
