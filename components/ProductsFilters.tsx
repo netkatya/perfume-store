@@ -24,17 +24,9 @@ type Props = {
   sort?: ProductSort;
   minPrice?: string;
   maxPrice?: string;
-  pageSize?: string;
 };
 
-export function ProductsFilters({
-  q,
-  tag,
-  sort,
-  minPrice,
-  maxPrice,
-  pageSize,
-}: Props) {
+export function ProductsFilters({ q, tag, sort, minPrice, maxPrice }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -83,65 +75,90 @@ export function ProductsFilters({
       <div className="rounded-3xl border border-(--border) bg-(--hover-bg)/60 p-6 shadow-sm backdrop-blur">
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
           {/* SEARCH */}
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              debouncedSearch(e.target.value);
-            }}
-            placeholder="Search perfumes..."
-            className="h-11 rounded-3xl border border-(--border) bg-white px-4 text-sm outline-none transition focus:border-(--accent) focus:ring-2 focus:ring-(--accent)/20 md:col-span-2"
-          />
+          <div className="md:col-span-2">
+            <label htmlFor="search" className="sr-only">
+              Search perfumes
+            </label>
+            <input
+              id="search"
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                debouncedSearch(e.target.value);
+              }}
+              placeholder="Search perfumes..."
+              className="h-11 w-full rounded-3xl border border-(--border) bg-white px-4 text-sm outline-none transition focus:border-(--accent) focus:ring-2 focus:ring-(--accent)/20"
+            />
+          </div>
 
           {/* SORT */}
-          <Select.Root value={sort ?? "none"} onValueChange={handleSort}>
-            <Select.Trigger className="flex h-11 w-full items-center justify-between rounded-3xl border border-(--border) bg-white px-4 text-sm text-(--text-secondary) outline-none transition focus:border-(--accent) focus:ring-2 focus:ring-(--accent)/20">
-              <Select.Value placeholder="Sort" />
-              <Select.Icon>
-                <ChevronDown size={16} />
-              </Select.Icon>
-            </Select.Trigger>
+          <div>
+            <label htmlFor="sort-trigger" className="sr-only">
+              Sort products
+            </label>
+            <Select.Root value={sort ?? "none"} onValueChange={handleSort}>
+              <Select.Trigger
+                id="sort-trigger"
+                aria-label="Sort products"
+                className="flex h-11 w-full items-center justify-between rounded-3xl border border-(--border) bg-white px-4 text-sm text-(--text-secondary) outline-none transition focus:border-(--accent) focus:ring-2 focus:ring-(--accent)/20"
+              >
+                <Select.Value placeholder="Sort" />
+                <Select.Icon>
+                  <ChevronDown size={16} aria-hidden="true" />
+                </Select.Icon>
+              </Select.Trigger>
 
-            <Select.Portal>
-              <Select.Content className="z-50 overflow-hidden rounded-2xl border border-(--border) bg-white shadow-lg">
-                <Select.ScrollUpButton className="flex items-center justify-center py-1">
-                  <ChevronUp size={16} />
-                </Select.ScrollUpButton>
+              <Select.Portal>
+                <Select.Content className="z-50 overflow-hidden rounded-2xl border border-(--border) bg-white shadow-lg">
+                  <Select.ScrollUpButton className="flex items-center justify-center py-1">
+                    <ChevronUp size={16} aria-hidden="true" />
+                  </Select.ScrollUpButton>
 
-                <Select.Viewport className="p-1">
-                  {SORT_OPTIONS.map((option) => (
-                    <Select.Item
-                      key={option.value}
-                      value={option.value}
-                      className="relative flex cursor-pointer items-center rounded-xl px-8 py-2 text-sm text-(--text-primary) outline-none hover:bg-(--hover-bg) data-[highlighted]:bg-(--hover-bg)"
-                    >
-                      <Select.ItemText>{option.label}</Select.ItemText>
-                      <Select.ItemIndicator className="absolute left-2">
-                        <Check size={14} />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                  ))}
-                </Select.Viewport>
+                  <Select.Viewport className="p-1">
+                    {SORT_OPTIONS.map((option) => (
+                      <Select.Item
+                        key={option.value}
+                        value={option.value}
+                        className="relative flex cursor-pointer items-center rounded-xl px-8 py-2 text-sm text-(--text-primary) outline-none hover:bg-(--hover-bg) data-highlighted:bg-(--hover-bg)"
+                      >
+                        <Select.ItemText>{option.label}</Select.ItemText>
+                        <Select.ItemIndicator className="absolute left-2">
+                          <Check size={14} aria-hidden="true" />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                    ))}
+                  </Select.Viewport>
 
-                <Select.ScrollDownButton className="flex items-center justify-center py-1">
-                  <ChevronDown size={16} />
-                </Select.ScrollDownButton>
-              </Select.Content>
-            </Select.Portal>
-          </Select.Root>
+                  <Select.ScrollDownButton className="flex items-center justify-center py-1">
+                    <ChevronDown size={16} aria-hidden="true" />
+                  </Select.ScrollDownButton>
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
+          </div>
         </div>
 
         {/* PRICE SLIDER */}
         <div className="mt-5">
-          <div className="mb-3 flex items-center justify-between text-sm text-(--text-secondary)">
-            <span>Price</span>
-            <span>
+          <div className="mb-3 flex items-center justify-between">
+            <label
+              htmlFor="price-slider"
+              className="text-sm text-(--text-secondary)"
+            >
+              Price
+            </label>
+            <span
+              aria-live="polite"
+              aria-atomic="true"
+              className="text-sm text-(--text-secondary)"
+            >
               £{priceRange[0]} — £{priceRange[1]}
             </span>
           </div>
 
           <Slider.Root
+            id="price-slider"
             min={PRICE_MIN}
             max={PRICE_MAX}
             step={10}
@@ -159,6 +176,7 @@ export function ProductsFilters({
             {priceRange.map((_, i) => (
               <Slider.Thumb
                 key={i}
+                aria-label={i === 0 ? "Minimum price" : "Maximum price"}
                 className="block h-5 w-5 rounded-full border-2 border-(--accent) bg-white shadow transition hover:bg-(--hover-bg) focus:outline-none focus:ring-2 focus:ring-(--accent)/20"
               />
             ))}
@@ -166,7 +184,11 @@ export function ProductsFilters({
         </div>
 
         {/* TAGS */}
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div
+          className="mt-5 flex flex-wrap gap-2"
+          role="group"
+          aria-label="Filter by category"
+        >
           {TAGS.map((presetTag) => {
             const active = tag === presetTag;
 
@@ -175,6 +197,7 @@ export function ProductsFilters({
                 key={presetTag}
                 type="button"
                 onClick={() => handleTagClick(presetTag)}
+                aria-pressed={active}
                 className={`rounded-3xl px-5 py-3 text-sm font-medium capitalize transition ${
                   active
                     ? "bg-(--accent) text-white shadow-sm"
@@ -198,7 +221,7 @@ export function ProductsFilters({
             }}
             className="rounded-3xl border border-(--border) bg-white px-6 py-3 text-sm font-medium text-(--text-secondary) transition hover:bg-(--hover-bg)"
           >
-            Reset
+            Reset filters
           </button>
         </div>
       </div>
