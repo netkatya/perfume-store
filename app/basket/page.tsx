@@ -64,14 +64,14 @@ export default function BasketPage() {
             key={item.id}
             className="grid gap-4 rounded-2xl border border-(--border) bg-white p-4 shadow-sm md:grid-cols-[120px_1fr_auto]"
           >
-            <div className="overflow-hidden rounded-xl bg-(--background)">
+            <div className="overflow-hidden rounded-xl ">
               {item.imageUrl ? (
                 <Image
                   src={item.imageUrl}
                   alt={item.name}
                   width={120}
                   height={120}
-                  className="h-30 w-full object-cover"
+                  className=" w-full h-full object-cover"
                 />
               ) : (
                 <div className="flex h-30 items-center justify-center text-sm text-(--text-secondary)">

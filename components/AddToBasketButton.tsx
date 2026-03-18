@@ -13,7 +13,7 @@ export function AddToBasketButton({ product }: AddToBasketButtonProps) {
   return (
     <button
       onClick={() => addItem(product)}
-      className="mt-6 rounded-3xl bg-(--accent) px-6 py-3 text-sm font-medium text-white transition hover:bg-(--accent-hover)"
+      className="mt-6 rounded-3xl bg-(--accent) px-6 py-3 text-sm font-medium text-white transition hover:bg-(--accent-hover) focus:bg-(--accent-hover) focus:outline-none focus:ring-2 focus:ring-(--accent)/20"
     >
       Add to Basket
     </button>
