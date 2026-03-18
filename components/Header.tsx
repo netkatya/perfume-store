@@ -7,7 +7,9 @@ import { useState } from "react";
 
 export function Header() {
   const hydrated = useBasketStore((state) => state.hydrated);
-  const totalItems = useBasketStore((state) => state.getTotalItems());
+  const totalItems = useBasketStore((state) =>
+    state.items.reduce((sum, i) => sum + i.quantity, 0),
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -22,40 +24,47 @@ export function Header() {
             Perfume<span className="text-(--accent)">Store</span>
           </Link>
 
-          <nav className="hidden items-center gap-6 md:flex">
-            <Link
-              href="/products"
-              className="text-xl font-bold text-(--text-secondary) transition hover:text-(--accent-hover)"
-            >
-              Products
-            </Link>
-
+          {/* RIGHT SIDE */}
+          <div className="flex md:flex-row-reverse items-center gap-2">
+            {/* BASKET */}
             <Link
               href="/basket"
-              className="relative flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-(--text-secondary) transition hover:bg-(--hover-bg) hover:text-(--accent-hover)"
+              aria-label={`Basket${hydrated && totalItems > 0 ? `, ${totalItems} items` : ""}`}
+              className="relative flex h-10 w-10 items-center justify-center rounded-full text-(--text-secondary) transition hover:bg-(--hover-bg) hover:text-(--accent-hover)"
             >
-              <ShoppingBasket size={24} aria-label="Basket button" />
-
-              {hydrated && totalItems > 0 ? (
+              <ShoppingBasket size={24} aria-hidden="true" />
+              {hydrated && totalItems > 0 && (
                 <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-(--accent) px-1 text-xs font-medium text-white">
                   {totalItems}
                 </span>
-              ) : null}
+              )}
             </Link>
-          </nav>
 
-          <button
-            type="button"
-            aria-label={isOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-(--border) bg-white text-(--text-primary) transition hover:bg-(--hover-bg) md:hidden"
-          >
-            {isOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
+            {/* NAV */}
+            <nav className="hidden items-center gap-2 md:flex">
+              <Link
+                href="/products"
+                className="px-3 py-2 text-sm font-bold text-(--text-secondary) transition hover:text-(--accent-hover)"
+              >
+                Products
+              </Link>
+            </nav>
+
+            {/* BURGER */}
+            <button
+              type="button"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              onClick={() => setIsOpen((prev) => !prev)}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-(--border) bg-white text-(--text-primary) transition hover:bg-(--hover-bg) md:hidden"
+            >
+              {isOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
         </div>
       </header>
 
+      {/* OVERLAY */}
       <div
         className={`fixed inset-0 z-40 bg-black/20 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
@@ -63,6 +72,7 @@ export function Header() {
         onClick={() => setIsOpen(false)}
       />
 
+      {/* DRAWER */}
       <aside
         className={`fixed right-0 top-0 z-50 h-full w-72 border-l border-(--border) bg-white p-6 shadow-xl transition-transform duration-300 ease-out md:hidden ${
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -91,26 +101,9 @@ export function Header() {
           <Link
             href="/products"
             onClick={() => setIsOpen(false)}
-            className="rounded-xl px-4 py-3 text-md font-bold text-(--text-primary) transition hover:bg-(--hover-bg) hover:text-(--accent-hover)"
+            className="rounded-xl px-4 py-3 text-sm font-bold text-(--text-primary) transition hover:bg-(--hover-bg) hover:text-(--accent-hover)"
           >
             Products
-          </Link>
-
-          <Link
-            href="/basket"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center justify-between rounded-xl px-4 py-3 text-md font-medium text-(--text-primary) transition hover:bg-(--hover-bg) hover:text-(--accent-hover)"
-          >
-            <span className="flex items-center gap-2">
-              <ShoppingBasket size={24} />
-              Basket
-            </span>
-
-            {hydrated && totalItems > 0 ? (
-              <span className="flex min-w-6 items-center justify-center rounded-full bg-(--accent) px-2 py-0.5 text-xs font-medium text-white">
-                {totalItems}
-              </span>
-            ) : null}
           </Link>
         </nav>
       </aside>
